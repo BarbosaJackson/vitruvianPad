@@ -69,25 +69,25 @@ bool search(tNode *root, string key)
     return (pCrawl != NULL && pCrawl->isEndOfWord); 
 } 
 
-int main() {
-    string word = "", text;
-    char ch;
-    tNode *root = getNode();
-    ch = getchar();
-    while(ch != '\n') {
-        if(ch == ' ') {
-            insert(root, word);
-            word = "";
-        }
-        word += ch;
-        ch = getchar();
-    }
-    insert(root, word);
-    while(1) {
-        cin >> word;
-        string out;
-        out = search(root, word) ? "Found" : "Not found";
-        cout << out << endl;
-    }
-    return 0;
-}
+// int main() {
+//     string word = "", text;
+//     char ch;
+//     tNode *root = getNode();
+//     ch = getchar();
+//     while(ch != '\n') {
+//         if(ch == ' ') {
+//             insert(root, word);
+//             word = "";
+//         }
+//         word += ch;
+//         ch = getchar();
+//     }
+//     insert(root, word);
+//     while(1) {
+//         cin >> word;
+//         string out;
+//         out = search(root, word) ? "Found" : "Not found";
+//         cout << out << endl;
+//     }
+//     return 0;
+// }

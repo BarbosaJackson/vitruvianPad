@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <termios.h>
 #include <cstdio>
-
+#include "trie.cpp"
 using namespace std;
 
 static struct termios old, newa;
@@ -48,13 +48,31 @@ void write(string pathFile) {
 	ifstream file;
 	file.open(pathFile.c_str());
 	string text, t;
+	char ch;
+	tNode *root = getNode();
 	while(file >> t) {
+		insert(root, t);
 		text += t + ' ';
 	}
 	cout << text;
+	string cWord = "";
 	while(1) {
-		text += getch();
+		ch = getch();
+		if(ch == 1) {
+			system("clear");
+			string word;
+			cout << "write a word for search: ";
+			cin >> word;
+			if(search(root, word)) cout << word << " found" << endl;
+			else cout << word << " not found" << endl;
+			return;
+		} else if(ch == ' ' || ch == '\n'){
+			insert(root, cWord);
+			cWord = "";
+			text += cWord + ch;
+		}
+		cWord += ch;
 		system("clear");
-		cout << text << endl;
+		cout << cWord << endl;
 	}
 }
