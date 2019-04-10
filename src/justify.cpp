@@ -24,7 +24,7 @@ vector < vector < lli > > Justify::pre_justify(vector<string> &words, lli lenght
 		DP[i].assign(qnt_words, INF);
 	for(lli i = 0; i < qnt_words; i++) {
 		lli sum = 0;
-		for(lli j = i; j < qnt_words; j++) {
+		for(lli j = i; j < qnt_words; j++, sum++) {
 			sum += words[j].size();
 			if(sum <= lenght) 
 				DP[i][j] = (lenght - sum) * (lenght - sum);
@@ -38,9 +38,11 @@ void Justify::findBest(vector<lli> &best, vector<lli> &line, vector<vector<lli>>
 		best[i] = DP[i][(lli)DP.size() - 1];
 		line[i] = (lli)DP.size();
 		for(lli j = DP.size() - 1; j > i; j--) {
-			if(DP[i][j - 1] != INF && best[i] > best[j] + DP[i][j - 1]){
-				best[i] = best[j] + DP[i][j - 1];
-				line[i] = j;
+			if(DP[i][j - 1] != INF){
+				if(best[i] > best[j] + DP[i][j - 1]){
+					best[i] = best[j] + DP[i][j - 1];
+					line[i] = j;
+				}
 			}
 		}
 	}
@@ -54,12 +56,13 @@ void Justify::print(vector<vector<lli>> &DP, vector<lli> &line, vector<string> &
 		return print(DP, line, words);
 	}
 	for(lli i = 0, j = 0; j < DP.size(); i = j) {
+		cout << line[i] << endl;
 		j = line[i];
 		for(lli k = i; k < j; k++) {
 			output << words[k];
 			if(k + 1 != j) output << " ";
 		}
-		output << endl;
+		output << "|" << endl;
 	}
 	output << endl;
 }

@@ -56,7 +56,7 @@ int main(int argc, char const *argv[]) {
 		}else if(op == 3) {
 			Justify just;
 			vector<string> text = just.build("res/input.txt");
-			vector< vector <lli >> DP = just.pre_justify(text, 10);
+			vector< vector <lli >> DP = just.pre_justify(text, 2);
 			vector<lli> line, best;
 			best.resize(DP.size());
 			line.resize(DP.size());
