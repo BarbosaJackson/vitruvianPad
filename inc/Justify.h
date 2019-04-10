@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#define INF 1 << 20
-
 using namespace std;
 
 typedef long long lli;

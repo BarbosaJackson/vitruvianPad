@@ -1,5 +1,5 @@
 #include "../inc/Justify.h"
-
+#include <limits>
 using namespace std;
 
 Justify::Justify() { }
@@ -12,7 +12,7 @@ vector<string> Justify::build(string filename) {
 	vector<string> text;
 	while(file >> line) {
 		text.push_back(line);
-	}
+	}	
 	return text;
 }
 
@@ -20,14 +20,16 @@ vector < vector < lli > > Justify::pre_justify(vector<string> &words, lli lenght
 	lli qnt_words = (lli)words.size();
 	vector < vector < lli > > DP;
 	DP.resize(qnt_words);
-	for(lli i = 0; i < qnt_words; i++) 
-		DP[i].assign(qnt_words, INF);
 	for(lli i = 0; i < qnt_words; i++) {
+		DP[i].resize(qnt_words);
 		lli sum = 0;
 		for(lli j = i; j < qnt_words; j++, sum++) {
 			sum += words[j].size();
-			if(sum <= lenght) 
+			if(sum <= lenght) {
 				DP[i][j] = (lenght - sum) * (lenght - sum);
+			} else {
+				DP[i][j] = numeric_limits<int>::max();
+			}
 		}
 	}
 	return DP;
@@ -38,7 +40,7 @@ void Justify::findBest(vector<lli> &best, vector<lli> &line, vector<vector<lli>>
 		best[i] = DP[i][(lli)DP.size() - 1];
 		line[i] = (lli)DP.size();
 		for(lli j = DP.size() - 1; j > i; j--) {
-			if(DP[i][j - 1] != INF){
+			if(DP[i][j - 1] != numeric_limits<int>::max()){
 				if(best[i] > best[j] + DP[i][j - 1]){
 					best[i] = best[j] + DP[i][j - 1];
 					line[i] = j;
@@ -56,13 +58,12 @@ void Justify::print(vector<vector<lli>> &DP, vector<lli> &line, vector<string> &
 		return print(DP, line, words);
 	}
 	for(lli i = 0, j = 0; j < DP.size(); i = j) {
-		cout << line[i] << endl;
 		j = line[i];
 		for(lli k = i; k < j; k++) {
 			output << words[k];
 			if(k + 1 != j) output << " ";
 		}
-		output << "|" << endl;
+		output << endl;
 	}
 	output << endl;
 }

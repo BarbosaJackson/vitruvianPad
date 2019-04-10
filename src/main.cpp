@@ -6,15 +6,21 @@ using namespace std;
 
 typedef long long lli;
 
-string readFile() {
+string readFile(string filename) {
 	ifstream file;
-	file.open("res/input.txt");
+	file.open(filename);
 	string text="", line;
 	while(getline(file, line)) {
 		text += (line + "\n");
 	}
 	file.close();
 	return text;
+}
+
+bool is_auto_complete(string word) {
+	if(word.length() <= 2) return false;
+	if(word[1] == '#' && word[2] == '#') return true;
+	return false;
 }
 
 int main(int argc, char const *argv[]) {
@@ -30,33 +36,42 @@ int main(int argc, char const *argv[]) {
 			cout << "qual palavra você gostaria de buscar: ";
 			string word;
 			cin >> word;
-			string text = readFile();
+			string text = readFile("res/input.txt");
 			vector<int> matches = _kmp.kmp(text, word);
 			cout << "foram encontradas: " << matches.size() << " ocorrencias dessa palavra";
 			if(matches.size()) cout << ", são elas:" << endl;
 			else cout << endl;
 			for(int i = 0; i < matches.size(); i++) {
-				cout << "[ " << i + 1 << " ] " << _kmp.getPreffix(matches[i], text) << _kmp.getSuffix(matches[i], text) << endl;
+				string match = _kmp.getPreffix(matches[i], text) + _kmp.getSuffix(matches[i], text);
+				if(!is_auto_complete(match)){
+					cout << "<" << matches[i] << ">: ";
+					cout << "[ " << i + 1 << " ] " << match << endl;
+				}
 			}
-			cout << "#####################################################";
+			cout << "#####################################################" << endl;
 		} else if(op == 2){
-			string text = readFile();
+			string text = readFile("res/input.txt");
+			set< pair < string, string > > autoCompletes;
 			for(int i = 0; i < text.length(); i++) {
-				if(text[i] == '!' && i + 1 < text.length() && text[i + 1] == '!') {
-					i++;
+				if(text[i] == '#' && i + 1 < text.length() && text[i + 1] == '#') {
+					i += 2;
 					string word = "";
 					while(isalpha(text[i])) {
 						word += text[i++];
 					}
-					text = readFile();
-					vector<int> matches = _kmp.kmp(text, word);
-					_kmp.write_suffix(_kmp.autoComplete(matches, word, text));
+					string text_auto_complete = readFile("res/BDST.txt");
+					vector<int> matches = _kmp.kmp(text_auto_complete, word);
+					set < pair < string, string > > aux = _kmp.autoComplete(matches, word, text_auto_complete);
+					for( auto p : aux) {
+						autoCompletes.insert(p);
+					}
 				}
+				_kmp.write_suffix(autoCompletes);
 			}
 		}else if(op == 3) {
 			Justify just;
 			vector<string> text = just.build("res/input.txt");
-			vector< vector <lli >> DP = just.pre_justify(text, 2);
+			vector< vector <lli >> DP = just.pre_justify(text, 50);
 			vector<lli> line, best;
 			best.resize(DP.size());
 			line.resize(DP.size());
@@ -65,19 +80,4 @@ int main(int argc, char const *argv[]) {
 		}
 	}
 	return 0;
-	// string text = "";
-	// ifstream file;
-	// file.open("res/BDST.txt");
-	// string line;
-	// while(file >> line) text += line + '\n';
-	// file.close();
-	// string palavra;
-	// KMP _kmp;
-
-	// while(1) {
-	// 	cin >> palavra;
-	// 	if(palavra == "xau") return 0;
-	// 	vector<int> m = _kmp.kmp(text, palavra);
-	// 	_kmp.write_suffix(_kmp.autoComplete(m, palavra, text));
-	// }
 }

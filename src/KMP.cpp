@@ -46,19 +46,19 @@ string KMP::getSuffix(int pos, string word) {
 	return sufix;
 }
 
-set<string> KMP::autoComplete(vector<int> matches, string word, string text) {
-	set < string > suffix;
+set<pair <string, string > > KMP::autoComplete(vector<int> matches, string word, string text) {
+	set < pair <string, string > > suffix;
 	int pos;
 	for(int i = 0; i < (int)matches.size() && suffix.size() < 4; i++ ){ 
 		string ans = getSuffix(matches[i] + word.size() - 1, text);
 		if(ans.size()){
-			suffix.insert(ans);
+			suffix.insert(make_pair(word, ans));
 		}
 	}
 	return suffix;
 }
 
-void KMP::write_suffix(set<string> suffix) {
+void KMP::write_suffix(set<pair <string, string > > suffix) {
 	ofstream file;
 	file.open("res/suffix.txt");
 	if(!file.good()) {
@@ -66,8 +66,7 @@ void KMP::write_suffix(set<string> suffix) {
 		return write_suffix(suffix);
 	}
 	for(auto s : suffix) {
-		string ans = s;
-		file << ans.c_str() << endl;
+		file << s.first << " => " << s.second << endl;
 	}
 	file.close();
 }
