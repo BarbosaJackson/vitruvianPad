@@ -10,8 +10,8 @@ vector<string> Justify::build(string filename) {
 	file.open(filename.c_str());
 	string line;
 	vector<string> text;
-	while(getline(file, line)) {
-		text.push_back(line + "\n");
+	while(file >> line) {
+		text.push_back(line);
 	}
 	return text;
 }
@@ -20,12 +20,14 @@ vector < vector < lli > > Justify::pre_justify(vector<string> &words, lli lenght
 	lli qnt_words = (lli)words.size();
 	vector < vector < lli > > DP;
 	DP.resize(qnt_words);
-	for(lli i = 0; i < qnt_words; i++) {
+	for(lli i = 0; i < qnt_words; i++) 
 		DP[i].assign(qnt_words, INF);
+	for(lli i = 0; i < qnt_words; i++) {
 		lli sum = 0;
-		for(lli j = 0; j < qnt_words; j++) {
+		for(lli j = i; j < qnt_words; j++) {
 			sum += words[j].size();
-			if(sum <= lenght) DP[i][j] = (lenght - sum) * (lenght - sum);
+			if(sum <= lenght) 
+				DP[i][j] = (lenght - sum) * (lenght - sum);
 		}
 	}
 	return DP;
@@ -54,8 +56,10 @@ void Justify::print(vector<vector<lli>> &DP, vector<lli> &line, vector<string> &
 	for(lli i = 0, j = 0; j < DP.size(); i = j) {
 		j = line[i];
 		for(lli k = i; k < j; k++) {
-			output << words[k] << (k + 1 != j ? ' ' : '\n');
+			output << words[k];
+			if(k + 1 != j) output << " ";
 		}
+		output << endl;
 	}
 	output << endl;
 }
